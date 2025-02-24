@@ -4,6 +4,8 @@ css-build-script for scss less
 ```
 // name: build.mjs
 
+// Collect all style files and output them into one file (such as './index.scss')
+
 import colors from 'colors-console'
 import { appendFileSync, existsSync, readdir, stat, unlink } from 'fs'
 import { dirname, extname, join, resolve } from 'path'
