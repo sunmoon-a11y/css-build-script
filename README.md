@@ -7,9 +7,10 @@ css-build-script for scss less
 // Collect all style files and output them into one file (such as './index.scss')
 
 import colors from 'colors-console'
-import { appendFileSync, existsSync, readdir, stat, unlink } from 'fs'
+import { appendFileSync, readdir, stat, unlink, existsSync } from 'fs'
 import { dirname, extname, join, resolve } from 'path'
 import { fileURLToPath } from 'url'
+import { unlinkSync } from "node:fs";
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -18,9 +19,9 @@ function error(label, err) {
   return console.error(colors(['red'], label), err)
 }
 
-const matchExtNames = ['.scss']
+const matchExtNames = ['.less']
 const targetPath = resolve(__dirname)
-const outputPath = resolve(__dirname, './index.scss')
+const outputPath = resolve(__dirname, './index.less')
 
 function writeFileFunc(filePath) {
   readdir(filePath, function (err, files) {
@@ -49,17 +50,16 @@ function writeFileFunc(filePath) {
   })
 }
 
-function run() {
-  unlink(outputPath, function (err) {
-    if (err) {
-      error('Error: \n %s', err)
-    } else {
-      writeFileFunc(targetPath)
-      console.info(colors(['green'], 'OK'))
-    }
-  })
+function main() {
+  try {
+    if (existsSync(outputPath)) unlinkSync(outputPath)
+    writeFileFunc(targetPath)
+    console.info(colors(['green'], 'OK'))
+  } catch (err) {
+    error('Error: \n %s', err)
+  }
 }
 
-run()
+main()
 
 ```
